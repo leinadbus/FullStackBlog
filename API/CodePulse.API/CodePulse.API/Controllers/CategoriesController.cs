@@ -86,7 +86,7 @@ namespace CodePulse.API.Controllers
 
         //PUT: /api/categories/{id}
         [HttpPut]
-        [Route("edit/{id:Guid")]
+        [Route("{id:Guid}")]
         public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
         {
             //Convert DTO to Domain Model
