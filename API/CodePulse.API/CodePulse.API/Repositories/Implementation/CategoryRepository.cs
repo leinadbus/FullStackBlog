@@ -29,5 +29,18 @@ namespace CodePulse.API.Repositories.Implementation
         {
             return await dbContext.Categorys.FirstOrDefaultAsync(c => c.Id == id);
         }
+
+        public async Task<Category?> UpdateAsync(Category category)
+        {
+            var existing = await dbContext.Categorys.FirstOrDefaultAsync(x => x.Id == category.Id);
+
+            if(existing != null)
+            {
+                dbContext.Entry(existing).CurrentValues.SetValues(category);
+                await dbContext.SaveChangesAsync();
+                return category;
+            }
+            return null;
+        }
     }
 }
