@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './Core/Components/navbar/navbar.component';
 import { CategoryListComponent } from './Features/Category/category-list/category-list.component';
 import { AddCategoryComponent } from './Features/Category/add-category/add-category.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { AddCategoryComponent } from './Features/Category/add-category/add-categ
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
