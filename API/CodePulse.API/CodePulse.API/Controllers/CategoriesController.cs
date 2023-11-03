@@ -16,6 +16,31 @@ namespace CodePulse.API.Controllers
             this.dbContext = dbContext;
         }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory(CreateCategoryRequestDto request)
+        {
+            //Map DTO to Domain Model
+
+            var Category = new Category
+            {
+                Name = request.Name,
+                UrlHandle = request.UrlHandle,
+            };
+
+            await dbContext.Categorys.AddAsync(Category);
+
+            await dbContext.SaveChangesAsync();
+
+            //Domain model to DTO
+
+            var response = new CategoryDto
+            {
+                Id = Category.Id,
+                Name = Category.Name,
+                UrlHandle = Category.UrlHandle,
+            };
+
+            return Ok(response);
+        }
     }
 }
