@@ -40,15 +40,43 @@ namespace CodePulse.API.Controllers
             var response = new BlogPostDto
             {
                 Id = BlogPost.Id,
-                Author = request.Author,
-                Title = request.Title,
-                Content = request.Content,
-                FeaturedImageUrl = request.FeaturedImageUrl,
-                IsVisible = request.IsVisible,
-                PublishedDate = request.PublishedDate,
-                ShortDescription = request.ShortDescription,
-                UrlHandle = request.UrlHandle
+                Author = BlogPost.Author,
+                Title = BlogPost.Tittle,
+                Content = BlogPost.Content,
+                FeaturedImageUrl = BlogPost.FeaturedImageUrl,
+                IsVisible = BlogPost.IsVisible,
+                PublishedDate = BlogPost.PublishedDate,
+                ShortDescription = BlogPost.ShortDescription,
+                UrlHandle = BlogPost.UrlHandle
             };
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllBlogPost()
+        {
+            var blogPost = await blogPostRepository.GetAllAsync();
+
+            //Convert DOMAIN MODEL to Dto
+
+            var response = new List<BlogPostDto>();
+
+            foreach (var BlogPost in blogPost)
+            {
+                response.Add(new BlogPostDto
+                {
+                    Id = BlogPost.Id,
+                    Author = BlogPost.Author,
+                    Title = BlogPost.Tittle,
+                    Content = BlogPost.Content,
+                    FeaturedImageUrl = BlogPost.FeaturedImageUrl,
+                    IsVisible = BlogPost.IsVisible,
+                    PublishedDate = BlogPost.PublishedDate,
+                    ShortDescription = BlogPost.ShortDescription,
+                    UrlHandle = BlogPost.UrlHandle
+                });
+                
+            }
             return Ok(response);
         }
     }
