@@ -50,13 +50,13 @@ namespace CodePulse.API.Controllers
             //MAP DOMAIN MODEL TO DTO
             var Response = new List<CategoryDto>();
 
-            foreach ( var category in categories)
+            foreach (var category in categories)
             {
-                Response.Add (new CategoryDto 
-                { 
-                    Id = category.Id, 
-                    Name = category.Name, 
-                    UrlHandle=category.UrlHandle 
+                Response.Add(new CategoryDto
+                {
+                    Id = category.Id,
+                    Name = category.Name,
+                    UrlHandle = category.UrlHandle
                 });
             }
 
@@ -66,11 +66,11 @@ namespace CodePulse.API.Controllers
         //api/categories/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> GetCategoryById ([FromRoute]Guid id)
+        public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
         {
             var existing = await categoryRepository.GetByIdAsync(id);
 
-            if(existing == null)
+            if (existing == null)
             {
                 return NotFound();
             }
@@ -99,7 +99,7 @@ namespace CodePulse.API.Controllers
 
             category = await categoryRepository.UpdateAsync(category);
 
-            if(category == null)
+            if (category == null)
             {
                 return NotFound();
             }
@@ -110,6 +110,26 @@ namespace CodePulse.API.Controllers
                 Id = category.Id,
                 Name = category.Name,
                 UrlHandle = category.UrlHandle
+            };
+
+            return Ok(response);
+        }
+
+        //DELETE: /api/categories/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeteleCategory([FromRoute] Guid id)
+        {
+            var categoryDeleted = await categoryRepository.DeleteAsync(id);
+            if(categoryDeleted == null) { return NotFound(); }
+
+            //Convert Domain to DTO
+
+            var response = new CategoryDto()
+            {
+                Id = categoryDeleted.Id,
+                Name = categoryDeleted.Name,
+                UrlHandle = categoryDeleted.UrlHandle
             };
 
             return Ok(response);
