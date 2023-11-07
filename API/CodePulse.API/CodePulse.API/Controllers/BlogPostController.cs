@@ -11,10 +11,13 @@ namespace CodePulse.API.Controllers
     public class BlogpostController : ControllerBase
     {
         private readonly IBlogPostRepository blogPostRepository;
+        private readonly ICategoryRepository categoryRepository;
 
-        public BlogpostController(IBlogPostRepository blogPostRepository)
+        public BlogpostController(IBlogPostRepository blogPostRepository,
+            ICategoryRepository categoryRepository)
         {
             this.blogPostRepository = blogPostRepository;
+            this.categoryRepository = categoryRepository;
         }
 
 
@@ -31,8 +34,18 @@ namespace CodePulse.API.Controllers
                 IsVisible = request.IsVisible,
                 PublishedDate = request.PublishedDate,
                 ShortDescription = request.ShortDescription,
-                UrlHandle = request.UrlHandle
+                UrlHandle = request.UrlHandle,
+                Categories = new List<Category>()
             };
+
+            foreach(var categoryGuid in request.Categories)
+            {
+                var existingCategory = await categoryRepository.GetByIdAsync(categoryGuid);
+                if (existingCategory != null)
+                {
+                    BlogPost.Categories.Add(existingCategory);
+                }
+            }
 
             BlogPost = await blogPostRepository.CreateAsync(BlogPost);
 
@@ -47,7 +60,13 @@ namespace CodePulse.API.Controllers
                 IsVisible = BlogPost.IsVisible,
                 PublishedDate = BlogPost.PublishedDate,
                 ShortDescription = BlogPost.ShortDescription,
-                UrlHandle = BlogPost.UrlHandle
+                UrlHandle = BlogPost.UrlHandle,
+                Categories = BlogPost.Categories.Select(x => new CategoryDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlHandle = x.UrlHandle
+                }).ToList()
             };
             return Ok(response);
         }
